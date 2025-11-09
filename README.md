@@ -1,6 +1,6 @@
 MedSupply Manager - Service Utilisateur
 
-   MedSupply Manager - User Service est un service backend pour la gestion des utilisateurs dans le système MedSupply.
+MedSupply Manager - User Service est un service backend pour la gestion des utilisateurs dans le système MedSupply.
 Il gère l’inscription, l’authentification et les rôles des utilisateurs (Admin, Fournisseur, Médecins, Patients/Pharmacies), ainsi que l’accès basé sur les permissions pour sécuriser les actions sensibles (produits sensibles, commandes, gestion des fournisseurs, etc.).
 
 Ce service est conçu pour le Sprint 0 de l’application, avec une attention particulière sur l’authentification et l’autorisation.
@@ -35,7 +35,7 @@ Gérer son profil et ses informations
 
 Chaque utilisateur doit s’authentifier via le service utilisateur avant d’accéder aux fonctionnalités.
 
-*Use Case principal :
+*Use Case principal :*
 
 (Inclure l’image du use case que tu as uploadée.)
 
@@ -58,20 +58,17 @@ server.js           # Point d’entrée de l’application
 .env                # Variables d'environnement
 package.json        # Dépendances et scripts
 
-*Installation et configuration
+*Installation et configuration*
 
 Cloner le dépôt
 
+```bash
 git clone https://github.com/MedSupply-Manager/user-service-.git
 cd MMAproject
+install dependencies 
+ npm install
 
-
-Installer les dépendances
-
-npm install
-
-
-Créer le fichier .env
+.env 
 # Server
 PORT=5001
 NODE_ENV=development
@@ -79,9 +76,6 @@ NODE_ENV=development
 # Frontend
 FRONTEND_URL=http://localhost:5173
 
-Démarrer le serveur
-
+pour demarer le serveur 
 node server.js
 
-
-Le service sera disponible à l’adresse : http://localhost:5001/api/users
