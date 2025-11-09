@@ -64,7 +64,7 @@ Cloner le dépôt
 
 ```bash
 git clone https://github.com/MedSupply-Manager/user-service-.git
-cd MMAproject
+
 install dependencies 
  npm install
 
