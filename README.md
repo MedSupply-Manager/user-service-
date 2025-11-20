@@ -1,100 +1,119 @@
-MedSupply Manager - Service Utilisateur
-MedSupply Manager - User Service est un service backend pour la gestion des utilisateurs dans le système MedSupply. Il gère l'inscription, l'authentification et les rôles des utilisateurs (Admin, Fournisseur, Pharmacies, Hôpitaux), ainsi que l'accès basé sur les permissions pour sécuriser les actions sensibles (produits sensibles, commandes, gestion des fournisseurs, etc.).
+# MedSupply Manager - User Service
 
-Ce service est conçu sur l'authentification, l'autorisation, et la qualité du code.
+MedSupply Manager User Service is a backend service for managing users in the MedSupply system. It handles user registration, authentication, and role-based access control (Admin, Supplier, Pharmacies, Hospitals), as well as permission-based access to secure sensitive operations (sensitive products, orders, supplier management, etc.).
 
- Sprint 1 - Fonctionnalités Réalisées
- Inscription utilisateur avec validation des données
- Authentification JWT
- Hachage des mots de passe avec bcrypt
- Rate limiting 
- Intégration MongoDB pour la persistance des données
- Tests automatisés avec Jest et Supertest
- Pipeline CI/CD avec GitHub Actions
- Analyse de qualité du code avec SonarQube
+This service is designed with a focus on authentication, authorization, and code quality.
 
- Rôles et Use Cases
-Le service gère plusieurs types d'utilisateurs :
+## Repository
 
-1. Administrateur Système (admin)
-Gérer tous les comptes et rôles
-Supervision des fournisseurs et commandes
-Accès complet au système
-2. Admin Fournisseur (admin_fournisseur)
-Passer des commandes auprès des fabricants
-Suivre l'état des commandes
-Gérer les informations des fournisseurs
-3. Pharmacie Autorisée (pharmacie_autorisee)
-Accès aux produits sensibles
-Passer des commandes normales et sensibles
-Consulter le catalogue et l'historique
-4. Pharmacie Standard (pharmacie_standard)
-Passer des commandes produits normaux uniquement
-Consulter le catalogue et l'historique de commandes
-5. Hôpital (hopital)
-Gérer les commandes hospitalières
-Accès aux produits médicaux spécialisés
-Consulter le catalogue et l'historique
-Chaque utilisateur doit s'authentifier via le service utilisateur avant d'accéder aux fonctionnalités.
+https://github.com/MedSupply-Manager/user-service-
 
-Dépôt https://github.com/MedSupply-Manager/user-service-
+---
+## Roles and Use Cases
 
- Structure du Projet
+The service manages several types of users:
+
+### 1. System Administrator (admin)
+- Manage all accounts and roles
+- Supervise suppliers and orders
+- Full system access
+
+### 2. Supplier Admin (admin_fournisseur)
+- Place orders with manufacturers
+- Track order status
+- Manage supplier information
+
+### 3. Authorized Pharmacy (pharmacie_autorisee)
+- Access to sensitive products
+- Place normal and sensitive orders
+- View catalog and order history
+
+### 4. Standard Pharmacy (pharmacie_standard)
+- Place normal product orders only
+- View catalog and order history
+
+### 5. Hospital (hopital)
+- Manage hospital orders
+- Access to specialized medical products
+- View catalog and order history
+
+Each user must authenticate through the user service before accessing features.
+check use case diagramme 
+---
+
+## Project Structure
+
+```
 users/
 ├── .github/
 │   └── workflows/
-        └── build.yml           #GitHub Actions workflow for SonarQube scan
-│       └── ci.yml              # Pipeline CI/CD
+│       ├── build.yml           # GitHub Actions workflow for SonarQube scan
+│       └── ci.yml              # CI/CD Pipeline
 ├── src/
 │   ├── config/                 # Configuration (DB, JWT, etc.)
-│   │   ├── db.js              # Connexion MongoDB
-│   │   ├── jwt.js             # Utilitaires JWT
-│   │   └── index.js           # Exports de configuration
-│   ├── controllers/            # Contrôleurs de routes
-│   │   └── userController.js  # Logique métier utilisateurs
-│   ├── middlewares/            # Middlewares Express
-│   │   ├── authMiddleware.js  # Vérification JWT
-│   │   ├── errorMiddleware.js # Gestion des erreurs
-│   │   ├── rateLimit.js       # Limitation de taux
-│   │   └── roleMiddleware.js  # Vérification des rôles
-│   ├── models/                 # Modèles Mongoose
-│   │   ├── userModel.js       # Schéma utilisateur
-│   │   └── sessionModel.js    # Schéma session
-│   ├── routes/                 # Routes API
-│   │   └── userRoutes.js      # Endpoints utilisateurs
-│   ├── services/               # Logique métier
-│   │   └── userService.js     # Services utilisateurs
-│   ├── utils/                  # Fonctions utilitaires
-│   │   └── logger.js          # Journalisation Winston
-│   ├── validations/            # Validation des données
-│   │   └── userValidation.js  # Schémas Joi
-│   └── server.js               # Point d'entrée
+│   │   ├── db.js              # MongoDB Connection
+│   │   ├── jwt.js             # JWT Utilities
+│   │   └── index.js           # Configuration Exports
+│   ├── controllers/            # Route Controllers
+│   │   └── userController.js  # User Business Logic
+│   ├── middlewares/            # Express Middlewares
+│   │   ├── authMiddleware.js  # JWT Verification
+│   │   ├── errorMiddleware.js # Error Handling
+│   │   ├── rateLimit.js       # Rate Limiting
+│   │   └── roleMiddleware.js  # Role Verification
+│   ├── models/                 # Mongoose Models
+│   │   ├── userModel.js       # User Schema
+│   │   └── sessionModel.js    # Session Schema
+│   ├── routes/                 # API Routes
+│   │   └── userRoutes.js      # User Endpoints
+│   ├── services/               # Business Logic
+│   │   └── userService.js     # User Services
+│   ├── utils/                  # Utility Functions
+│   │   ├── logger.js          # Winston Logging
+│   │   └── mail.js            # Email Utilities
+│   ├── validations/            # Data Validation
+│   │   └── userValidation.js  # Joi Schemas
+│   └── server.js               # Entry Point
 ├── Test/
-│   └── users.test.js           # Tests Jest
-├── logs/                       # Logs applicatifs
-├── .env                        # Variables d'environnement
-├── .gitignore                  # Fichiers ignorés par Git
-├── jest.config.js              # Configuration Jest
-├── package.json                # Dépendances npm
-├── sonar-project.properties    # Configuration SonarCloud
+│   └── users.test.js           # Jest Tests
+├── logs/                       # Application Logs
+├── .env                        # Environment Variables
+├── .gitignore                  # Git Ignored Files
+├── jest.config.js              # Jest Configuration
+├── package.json                # npm Dependencies
+├── sonar-project.properties    # SonarCloud Configuration
 └── README.md                   # Documentation
- Installation et Configuration
-Prérequis
-Node.js v18+ installé
-MongoDB v6+ installé et en cours d'exécution
-Git installé
-1. Cloner le dépôt
-bash
+```
+
+---
+
+## Installation and Configuration
+
+### Prerequisites
+
+- Node.js v18+ installed
+- MongoDB v6+ installed and running
+- Git installed
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/MedSupply-Manager/user-service-.git
 cd user-service-
-2. Installer les dépendances
-bash
-npm install
-3. Configurer les variables d'environnement
-Créer un fichier .env à la racine du projet :
+```
 
-env
-# Serveur
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file at the root of the project:
+
+```env
+# Server
 PORT=5001
 NODE_ENV=development
 
@@ -104,36 +123,134 @@ FRONTEND_URL=http://localhost:5173
 # MongoDB
 MONGO_URI=mongodb://localhost:27017/users_db
 
-# JWT Secrets (Générer des secrets sécurisés pour production)
-JWT_ACCESS_SECRET=votre_secret_access_jwt_ici
-JWT_REFRESH_SECRET=votre_secret_refresh_jwt_ici
+# JWT Secrets (Generate secure secrets for production)
+JWT_ACCESS_SECRET=your_secure_access_secret_here
+JWT_REFRESH_SECRET=your_secure_refresh_secret_here
+JWT_EMAIL_SECRET=your_secure_email_secret_here
+JWT_PASSWORD_RESET_SECRET=your_secure_reset_secret_here
 
-# Configuration JWT
+# JWT Configuration
 JWT_ACCESS_EXPIRES=15m
 JWT_REFRESH_EXPIRES=7d
+JWT_ALGORITHM=HS256
 
-# Sécurité
+# Email Configuration (Mailtrap)
+SMTP_HOST=sandbox.smtp.mailtrap.io
+SMTP_PORT=587
+SMTP_USER=your_mailtrap_user
+SMTP_PASS=your_mailtrap_password
+EMAIL_FROM="MedSupply Manager <noreply@medsupply.local>"
+
+# Security
 BCRYPT_ROUNDS=12
-4. Démarrer MongoDB
-bash
+MAX_LOGIN_ATTEMPTS=5
+LOCKOUT_DURATION=30
+```
+
+**Important Security Notes:**
+- Replace all JWT secrets with strong, randomly generated secrets in production
+- Use a secure SMTP service for production (not Mailtrap)
+- Never commit the `.env` file to version control
+
+### 4. Start MongoDB
+
+```bash
 # Windows
 net start MongoDB
 
 # macOS/Linux
 sudo systemctl start mongod
-5. Lancer le serveur
-bash
-# Mode développement
+```
+
+### 5. Launch the Server
+
+```bash
+# Development mode
 npm run dev
 
-# Mode production
+# Production mode
 npm start
-Le serveur démarre sur : http://localhost:5001
+```
 
- Tests
-Exécuter les tests
-bash
-# Tous les tests
+The server starts on: http://localhost:5001
+
+---
+
+## API Endpoints
+
+### Public Routes
+
+**POST** `/api/users/register` - Register a new user  
+**POST** `/api/users/login` - User login  
+**GET** `/api/users/verify-email/:token` - Verify email  
+**POST** `/api/users/forgot-password` - Request password reset  
+**POST** `/api/users/reset-password` - Reset password  
+**POST** `/api/users/refresh-token` - Refresh access token  
+**GET** `/api/users/verify-token` - Verify current token  
+**GET** `/api/users/health` - Health check endpoint  
+
+### Protected Routes (Requires Authentication)
+
+**POST** `/api/users/logout` - User logout  
+**GET** `/api/users/profile` - Get user profile  
+
+### Admin-Only Routes
+
+**GET** `/api/users/` - Get all users  
+**GET** `/api/users/:id` - Get user by ID  
+**PUT** `/api/users/:id` - Update user  
+**DELETE** `/api/users/:id` - Deactivate user  
+**GET** `/api/users/admin/dashboard` - Admin dashboard  
+
+---
+
+## Testing
+
+### Run Tests
+
+```bash
+# All tests
 npm test
-#test avec postman 
-https://silmihadjer.postman.co/workspace/mma-project~619205f2-5832-49f8-a093-7034090113c1/request/45178617-a5cd2457-1c74-4d1f-9b63-96fd821aa178?action=share&creator=45178617&ctx=documentation
+
+# With coverage
+npm run test:coverage
+```
+
+### Test with Postman
+
+Postman workspace available at:  
+https://silmihadjer.postman.co/workspace/stock-managment~d0857ac6-5832-4180-a1f7-cea02648758a/request/45178617-cde26ca8-bf0b-4a6d-90e5-833768227689?action=share&creator=45178617&ctx=documentation
+
+---
+
+## CI/CD Pipeline
+
+The project includes automated GitHub Actions workflows:
+
+### CI Pipeline (.github/workflows/ci.yml)
+- Runs on every push and pull request
+- Executes automated tests
+- Validates code quality
+
+### SonarQube Analysis (.github/workflows/build.yml)
+- Code quality and security analysis
+- Coverage reporting
+- Technical debt tracking
+
+## Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server with hot reload
+npm run dev
+
+# Start production server
+npm start
+
+# Run tests
+npm test
+
+
+---
