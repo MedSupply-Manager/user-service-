@@ -4,6 +4,5 @@ import { JWTManager } from "./jwt.js";
 export {
     connectDB,
     disconnectDB,
-    JWTManager,
-
+    JWTManager
 };

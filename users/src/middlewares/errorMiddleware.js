@@ -1,8 +1,6 @@
 import logger from "../utils/logger.js";
 
-// Express error handler
 export const errorHandler = (err, req, res, next) => {
-    // Log the error 
     if (process.env.NODE_ENV === "development") {
         console.error(err.stack);
         logger?.error(err.stack);

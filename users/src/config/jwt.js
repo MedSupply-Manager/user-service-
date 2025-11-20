@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
 
-// Don't read secrets at module load time - read them when functions are called
-const getSecrets = () => ({
+const SECRETS = {
     access: process.env.JWT_ACCESS_SECRET,
     refresh: process.env.JWT_REFRESH_SECRET,
     email: process.env.JWT_EMAIL_SECRET,
     reset: process.env.JWT_PASSWORD_RESET_SECRET
-});
+};
 
 const OPTIONS = { audience: "stock-management-users", issuer: "stock-management" };
 
@@ -25,39 +24,15 @@ const verify = (token, secret) => {
 
 // JWT Manager
 export const JWTManager = {
-    generateAccessToken: (payload) => {
-        const SECRETS = getSecrets();
-        return { token: sign(payload, SECRETS.access, "15m") };
-    },
-    verifyAccessToken: (token) => {
-        const SECRETS = getSecrets();
-        return verify(token, SECRETS.access);
-    },
+    generateAccessToken: (payload) => ({ token: sign(payload, SECRETS.access, "15m") }),
+    verifyAccessToken: (token) => verify(token, SECRETS.access),
 
-    generateRefreshToken: (payload) => {
-        const SECRETS = getSecrets();
-        return { token: sign(payload, SECRETS.refresh, "7d") };
-    },
-    verifyRefreshToken: (token) => {
-        const SECRETS = getSecrets();
-        return verify(token, SECRETS.refresh);
-    },
+    generateRefreshToken: (payload) => ({ token: sign(payload, SECRETS.refresh, "7d") }),
+    verifyRefreshToken: (token) => verify(token, SECRETS.refresh),
 
-    generateEmailToken: (payload) => {
-        const SECRETS = getSecrets();
-        return { token: sign(payload, SECRETS.email, "24h") };
-    },
-    verifyEmailToken: (token) => {
-        const SECRETS = getSecrets();
-        return verify(token, SECRETS.email);
-    },
+    generateEmailToken: (payload) => ({ token: sign(payload, SECRETS.email, "24h") }),
+    verifyEmailToken: (token) => verify(token, SECRETS.email),
 
-    generatePasswordResetToken: (payload) => {
-        const SECRETS = getSecrets();
-        return { token: sign(payload, SECRETS.reset, "1h") };
-    },
-    verifyPasswordResetToken: (token) => {
-        const SECRETS = getSecrets();
-        return verify(token, SECRETS.reset);
-    }
+    generatePasswordResetToken: (payload) => ({ token: sign(payload, SECRETS.reset, "1h") }),
+    verifyPasswordResetToken: (token) => verify(token, SECRETS.reset)
 };

@@ -1,10 +1,23 @@
 import express from "express";
-import { register, login } from "../controllers/userController.js";
+import {
+    register,
+    login,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
+    refreshToken,
+    logout,
+    getProfile,
+    getAllUsers,
+    getUserById,
+    updateUser,
+    deleteUser
+} from "../controllers/userController.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { roleMiddleware } from "../middlewares/roleMiddleware.js";
 import { loginLimiter } from "../middlewares/rateLimit.js";
 
 const router = express.Router();
-
-//  HEALTH CHECK
 router.get("/health", (req, res) => {
     res.json({
         status: "UP",
@@ -14,10 +27,47 @@ router.get("/health", (req, res) => {
     });
 });
 
-//  REGISTER
+// PUBLIC ROUTES
 router.post("/register", loginLimiter, register);
-
-//  LOGIN
 router.post("/login", loginLimiter, login);
+router.get("/verify-email/:token", verifyEmail);
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password", resetPassword);
+router.post("/refresh-token", refreshToken);
+router.get("/verify-token", authMiddleware, (req, res) => {
+    res.json({
+        success: true,
+        valid: true,
+        user: {
+            id: req.user._id,
+            username: req.user.username,
+            email: req.user.email,
+            role: req.user.role,
+            status: req.user.status,
+            emailVerified: req.user.emailVerified
+        }
+    });
+});
+
+// PROTECTED ROUTES
+router.post("/logout", authMiddleware, logout);
+router.get("/profile", authMiddleware, getProfile);
+
+// ADMIN ONLY ROUTES 
+router.get("/", authMiddleware, roleMiddleware("admin"), getAllUsers);
+router.get("/:id", authMiddleware, roleMiddleware("admin"), getUserById);
+router.put("/:id", authMiddleware, roleMiddleware("admin"), updateUser);
+router.delete("/:id", authMiddleware, roleMiddleware("admin"), deleteUser);
+router.get("/admin/dashboard", authMiddleware, roleMiddleware("admin"), (req, res) => {
+    res.json({
+        success: true,
+        message: "Welcome to Admin Dashboard!",
+        user: {
+            id: req.user._id,
+            username: req.user.username,
+            role: req.user.role
+        }
+    });
+});
 
 export default router;

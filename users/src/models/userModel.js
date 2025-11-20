@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema(
         role: {
             type: String,
             enum: Object.values(USER_ROLES),
+            default: USER_ROLES.MANAGER,
         },
         status: {
             type: String,
@@ -61,14 +62,12 @@ const userSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Hash password before saving
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 12);
     next();
 });
 
-// Compare password
 userSchema.methods.comparePassword = function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };

@@ -22,7 +22,7 @@ sessionSchema.statics.createSession = async function ({
     return this.create({ userId, accessToken, refreshToken, userAgent, ipAddress });
 };
 
-// Delete all sessions for a user (used on logout)
+// Delete all sessions 
 sessionSchema.statics.deleteManyByUser = async function (userId) {
     return this.deleteMany({ userId });
 };
@@ -39,7 +39,7 @@ sessionSchema.methods.refreshSession = async function (accessToken, refreshToken
     await this.save();
     return this;
 };
-//  Revoke a specific session (for logout)
+//   for logout
 sessionSchema.statics.revokeSession = async function (userId, refreshToken) {
     return this.deleteOne({ userId, refreshToken });
 };
