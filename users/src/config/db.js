@@ -3,19 +3,28 @@ import dotenv from "dotenv";
 import logger from "../utils/logger.js";
 import path from "path";
 
-
-dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
-const mongoUri = process.env.MONGO_URI;
+if (process.env.NODE_ENV !== 'test') {
+    dotenv.config({ path: path.resolve(process.cwd(), "../.env") });
+}
 
 // Connect to MongoDB
 export const connectDB = async () => {
     try {
-        if (!mongoUri) throw new Error("MONGO_URI not found in .env");
+        const mongoUri = process.env.MONGO_URI;
+
+        if (!mongoUri) {
+            throw new Error("MONGO_URI not found in environment variables");
+        }
+
         await mongoose.connect(mongoUri);
-        logger.info("MongoDB connected successfully");
+        logger.info(`MongoDB connected successfully to ${mongoUri}`);
     } catch (err) {
         logger.error(`MongoDB connection error: ${err.message}`);
-        process.exit(1);
+        if (process.env.NODE_ENV !== 'test') {
+            process.exit(1);
+        } else {
+            throw err;
+        }
     }
 };
 

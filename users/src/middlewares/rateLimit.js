@@ -1,6 +1,11 @@
 import rateLimit from "express-rate-limit";
 
 export const createRateLimiter = (options = {}) => {
+    // Disable rate limiting in test environment
+    if (process.env.NODE_ENV === 'test') {
+        return (req, res, next) => next();
+    }
+
     return rateLimit({
         windowMs: options.windowMs || 15 * 60 * 1000,
         max: options.max || 100,

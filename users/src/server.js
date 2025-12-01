@@ -31,16 +31,23 @@ app.get("/", (req, res) => {
 });
 
 app.use(errorHandler);
-const PORT = process.env.PORT || 5001;
 
-connectDB()
-    .then(() => {
-        app.listen(PORT, () => {
-            console.log(` Users Service running on http://localhost:${PORT}`);
-            console.log(` Health Check: http://localhost:${PORT}/api/users/health`);
+// Export app for testing
+export default app;
+
+// Only start server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+    const PORT = process.env.PORT || 5001;
+
+    connectDB()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(` Users Service running on http://localhost:${PORT}`);
+                console.log(` Health Check: http://localhost:${PORT}/api/users/health`);
+            });
+        })
+        .catch((err) => {
+            console.error(" Failed to connect to MongoDB:", err);
+            process.exit(1);
         });
-    })
-    .catch((err) => {
-        console.error(" Failed to connect to MongoDB:", err);
-        process.exit(1);
-    });
+}

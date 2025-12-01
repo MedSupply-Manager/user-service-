@@ -1,23 +1,16 @@
 export default {
     testEnvironment: 'node',
-    coveragePathIgnorePatterns: [
-        '/node_modules/',
-        '/logs/'
-    ],
-    testMatch: [
-        '**/Test/**/*.test.js',
-        '**/__tests__/**/*.test.js',
-        '**/?(*.)+(spec|test).js'
-    ],
     transform: {},
-    coverageDirectory: 'coverage',
-    collectCoverageFrom: [
-        'src/**/*.js',
-        '!src/server.js',
-        '!src/utils/logger.js'
-    ],
+    testMatch: ['**/Test/**/*.test.js'],
+    collectCoverageFrom: ['src/**/*.js'],
+    coveragePathIgnorePatterns: ['/node_modules/'],
     testTimeout: 60000,
-    verbose: true,
     detectOpenHandles: true,
-    forceExit: true
+    forceExit: true,
+    clearMocks: true,
+    resetMocks: true,
+    restoreMocks: true,
+    verbose: true,
+    maxWorkers: 1,
+    bail: false
 };
