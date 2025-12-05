@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+
+  /* Light theme */
+  .light body {
+    @apply bg-light-100 text-light-900;
+  }
+
+  /* Dark theme */
+  .dark body {
+    @apply bg-dark-950 text-dark-50;
+  }
+
+  body {
+    @apply font-sans antialiased;
+  }
+
+  /* Custom scrollbar - Light */
+  .light ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .light ::-webkit-scrollbar-track {
+    @apply bg-light-200;
+  }
+
+  .light ::-webkit-scrollbar-thumb {
+    @apply bg-light-400 rounded-full hover:bg-light-500;
+  }
+
+  /* Custom scrollbar - Dark */
+  .dark ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-dark-900;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-dark-700 rounded-full hover:bg-dark-600;
+  }
+}
+
+@layer components {
+
+  /* Glass effect */
+  .glass {
+    @apply backdrop-blur-md border;
+  }
+
+  .light .glass {
+    @apply bg-white/50 border-light-300/50;
+  }
+
+  .dark .glass {
+    @apply bg-dark-800/50 border-dark-700/50;
+  }
+
+  /* Button styles */
+  .btn-primary {
+    @apply px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-all duration-200 font-medium shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply px-4 py-2 rounded-lg transition-all duration-200 font-medium active:scale-95;
+  }
+
+  .light .btn-secondary {
+    @apply bg-light-200 hover:bg-light-300 text-light-900;
+  }
+
+  .dark .btn-secondary {
+    @apply bg-dark-700 hover:bg-dark-600 text-dark-100;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 font-medium shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/30 active:scale-95;
+  }
+
+  .btn-success {
+    @apply px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-all duration-200 font-medium shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30 active:scale-95;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-4 py-2.5 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500/20;
+  }
+
+  .light .input {
+    @apply bg-white border border-light-300 text-light-900 placeholder-light-500 focus:border-primary-500;
+  }
+
+  .dark .input {
+    @apply bg-dark-800 border border-dark-700 text-dark-50 placeholder-dark-400 focus:border-primary-500;
+  }
+
+  /* Card styles */
+  .card {
+    @apply glass rounded-xl p-6 shadow-xl;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply px-3 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary-500/20 text-primary-400 border border-primary-500/30;
+  }
+
+  .badge-success {
+    @apply badge bg-green-500/20 text-green-400 border border-green-500/30;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+  }
+
+  .badge-danger {
+    @apply badge bg-red-500/20 text-red-400 border border-red-500/30;
+  }
+
+  /* Auth page specific styles */
+  .auth-container {
+    @apply min-h-screen flex items-center justify-center p-4;
+  }
+
+  .light .auth-container {
+    @apply bg-gradient-to-br from-primary-50 via-light-100 to-primary-100;
+  }
+
+  .dark .auth-container {
+    @apply bg-gradient-to-br from-dark-950 via-dark-900 to-dark-950;
+  }
+
+  .auth-card {
+    @apply glass rounded-2xl p-8 w-full max-w-md shadow-2xl;
+  }
+
+  .auth-title {
+    @apply text-3xl font-bold mb-2 text-center;
+  }
+
+  .light .auth-title {
+    @apply text-light-900;
+  }
+
+  .dark .auth-title {
+    @apply text-dark-50;
+  }
+
+  .auth-subtitle {
+    @apply text-center mb-8;
+  }
+
+  .light .auth-subtitle {
+    @apply text-light-600;
+  }
+
+  .dark .auth-subtitle {
+    @apply text-dark-400;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
