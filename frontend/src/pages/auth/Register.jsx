@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { User, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Loader2, Shield } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ThemeToggle from '../../components/ThemeToggle';
 
@@ -13,11 +13,20 @@ const Register = () => {
         email: '',
         password: '',
         confirmPassword: '',
+        role: 'pharmacie_standard', // Default role
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
+
+    // Available roles (excluding admin - only admin can create admin accounts)
+    const availableRoles = [
+        { value: 'admin_fournisseur', label: 'Admin Fournisseur', description: 'Gestion des fournisseurs et produits sensibles' },
+        { value: 'pharmacie_autorisee', label: 'Pharmacie Autorisée', description: 'Accès aux produits sensibles' },
+        { value: 'pharmacie_standard', label: 'Pharmacie Standard', description: 'Accès aux produits standard' },
+        { value: 'hopital', label: 'Hôpital', description: 'Gestion hospitalière et commandes' },
+    ];
 
     const handleChange = (e) => {
         setFormData({
@@ -69,6 +78,7 @@ const Register = () => {
             email: formData.email,
             password: formData.password,
             confirmPassword: formData.confirmPassword,
+            role: formData.role,
         });
 
         if (result.success) {
@@ -94,6 +104,9 @@ const Register = () => {
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
                         Un email de vérification a été envoyé à <strong>{formData.email}</strong>
                     </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-500 mb-4">
+                        Votre compte a été créé avec le rôle: <strong className="text-primary-600">{availableRoles.find(r => r.value === formData.role)?.label}</strong>
+                    </p>
                     <p className="text-sm text-gray-500 dark:text-gray-500">
                         Redirection vers la page de connexion...
                     </p>
@@ -108,7 +121,7 @@ const Register = () => {
                 <ThemeToggle />
             </div>
 
-            <div className="auth-card animate-slide-up">
+            <div className="auth-card animate-slide-up max-w-2xl">
                 {/* Logo */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-500 rounded-2xl mb-4">
@@ -128,95 +141,147 @@ const Register = () => {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Username */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Nom d'utilisateur</label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                name="username"
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="input pl-10"
-                                placeholder="johndoe"
-                                disabled={loading}
-                            />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Username */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Nom d'utilisateur</label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    type="text"
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    className="input pl-10"
+                                    placeholder="johndoe"
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Email</label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="input pl-10"
+                                    placeholder="votre@email.com"
+                                    disabled={loading}
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    {/* Email */}
+                    {/* Role Selection */}
                     <div>
-                        <label className="block text-sm font-medium mb-2">Email</label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className="input pl-10"
-                                placeholder="votre@email.com"
-                                disabled={loading}
-                            />
+                        <label className="block text-sm font-medium mb-2">
+                            <Shield className="inline w-4 h-4 mr-1" />
+                            Type de compte
+                        </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {availableRoles.map((role) => (
+                                <label
+                                    key={role.value}
+                                    className={`relative flex flex-col p-4 rounded-lg border-2 cursor-pointer transition-all ${formData.role === role.value
+                                            ? 'border-primary-500 bg-primary-500/10'
+                                            : 'border-light-300 dark:border-dark-700 hover:border-primary-400'
+                                        }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="role"
+                                        value={role.value}
+                                        checked={formData.role === role.value}
+                                        onChange={handleChange}
+                                        className="sr-only"
+                                        disabled={loading}
+                                    />
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${formData.role === role.value
+                                                ? 'border-primary-500 bg-primary-500'
+                                                : 'border-gray-400'
+                                            }`}>
+                                            {formData.role === role.value && (
+                                                <div className="w-2 h-2 bg-white rounded-full" />
+                                            )}
+                                        </div>
+                                        <span className="font-semibold text-sm text-light-900 dark:text-dark-50">
+                                            {role.label}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-light-600 dark:text-dark-400 ml-6">
+                                        {role.description}
+                                    </p>
+                                </label>
+                            ))}
                         </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                            * Les comptes administrateurs sont créés uniquement par l'équipe PharmaStock
+                        </p>
                     </div>
 
-                    {/* Password */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Mot de passe</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type={showPassword ? 'text' : 'password'}
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="input pl-10 pr-10"
-                                placeholder="••••••••"
-                                disabled={loading}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                tabIndex={-1}
-                            >
-                                {showPassword ? (
-                                    <EyeOff className="w-5 h-5" />
-                                ) : (
-                                    <Eye className="w-5 h-5" />
-                                )}
-                            </button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Password */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Mot de passe</label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="input pl-10 pr-10"
+                                    placeholder="••••••••"
+                                    disabled={loading}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                    tabIndex={-1}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="w-5 h-5" />
+                                    ) : (
+                                        <Eye className="w-5 h-5" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Confirm Password */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                                className="input pl-10 pr-10"
-                                placeholder="••••••••"
-                                disabled={loading}
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                                tabIndex={-1}
-                            >
-                                {showConfirmPassword ? (
-                                    <EyeOff className="w-5 h-5" />
-                                ) : (
-                                    <Eye className="w-5 h-5" />
-                                )}
-                            </button>
+                        {/* Confirm Password */}
+                        <div>
+                            <label className="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <input
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    className="input pl-10 pr-10"
+                                    placeholder="••••••••"
+                                    disabled={loading}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                    tabIndex={-1}
+                                >
+                                    {showConfirmPassword ? (
+                                        <EyeOff className="w-5 h-5" />
+                                    ) : (
+                                        <Eye className="w-5 h-5" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                     </div>
 
