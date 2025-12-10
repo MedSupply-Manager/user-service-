@@ -1,4 +1,4 @@
-MedSupply Manager - Service Utilisateur
+whyMedSupply Manager - Service Utilisateur
 MedSupply Manager - User Service est un service backend pour la gestion des utilisateurs dans le système MedSupply. Il gère l'inscription, l'authentification et les rôles des utilisateurs (Admin, Fournisseur, Pharmacies, Hôpitaux), ainsi que l'accès basé sur les permissions pour sécuriser les actions sensibles (produits sensibles, commandes, gestion des fournisseurs, etc.).
 
 Ce service est conçu sur l'authentification, l'autorisation, et la qualité du code.
@@ -123,11 +123,7 @@ net start MongoDB
 sudo systemctl start mongod
 5. Lancer le serveur
 bash
-# Mode développement
-npm run dev
-
-# Mode production
-npm start
+node server.js
 Le serveur démarre sur : http://localhost:5001
 
  Tests
